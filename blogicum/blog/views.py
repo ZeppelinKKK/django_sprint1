@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 
 posts = [
     {
@@ -52,8 +53,11 @@ def index(request):
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template, context)
+    for post in posts:
+        if post['id'] == id:
+            context = {'post': posts[id]}
+            return render(request, template, context)
+    raise Http404("Page doesn't exist.")
 
 
 def category_posts(request, category_slug):
